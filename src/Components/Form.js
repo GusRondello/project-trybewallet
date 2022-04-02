@@ -1,13 +1,20 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { fetchWalletCurrency } from '../actions';
 
 class Form extends Component {
   constructor() {
     super();
     this.state = {
-      valor: 0,
+      valor: '',
       description: '',
-      currencies: 'BRL',
     };
+  }
+
+  componentDidMount() {
+    const { action } = this.props;
+    action();
   }
 
     handleInputText = ({ target }) => {
@@ -19,7 +26,8 @@ class Form extends Component {
     }
 
     render() {
-      const { valor, description, currencies } = this.state;
+      const { currencies } = this.props;
+      const { valor, description } = this.state;
       return (
         <form>
           <label htmlFor="valor">
@@ -33,14 +41,22 @@ class Form extends Component {
             />
           </label>
           <label htmlFor="moeda">
-            Moeda:
+            Moeda
             <select
-              value={ currencies }
               name="moeda"
               data-testid="currency-input"
+              id="moeda"
             >
-              <option value="BRL">BRL</option>
+              {currencies.map((moeda) => (
+                <option
+                  value={ moeda }
+                  key={ moeda }
+                >
+                  {moeda}
+                </option>
+              ))}
             </select>
+
           </label>
           <label htmlFor="metodo">
             Método de Pagamento:
@@ -80,8 +96,17 @@ class Form extends Component {
       );
     }
 }
-const mapStateToProps = (dispatch) => ({
-  action: (email) => dispatch(userEmailRequest(email)),
+const mapStateToProps = (state) => ({
+  currencies: state.wallet.currencies,
 });
 
-export default connect(mapStateToProps)(Form);
+const mapDispatchToProps = (dispatch) => ({
+  action: () => dispatch(fetchWalletCurrency()),
+});
+
+Form.propTypes = {
+  action: PropTypes.func.isRequired,
+  currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Form);
