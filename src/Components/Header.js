@@ -6,6 +6,8 @@ class Header extends Component {
   render() {
     // const { email, expenses, currencies } = this.props;
     const { email } = this.props;
+    const initialExpense = 0;
+    const initialCurrency = 'BRL';
     return (
       <header>
         <h2
@@ -16,12 +18,12 @@ class Header extends Component {
         <h2
           data-testid="total-field"
         >
-          0
+          {initialExpense}
         </h2>
         <h2
           data-testid="header-currency-field"
         >
-          BRL
+          {initialCurrency}
         </h2>
       </header>
     );

@@ -1,18 +1,40 @@
 // Coloque aqui suas actions
-export const REQUEST_USER_EMAIL = 'REQUEST_USER_EMAIL';
-export const USER_WALLET = 'USER_WALLET';
+import getCurrencies from '../services/CurrencyAPI';
 
-export function userEmailRequest(email) {
-  return {
-    type: REQUEST_USER_EMAIL,
-    email,
-  };
-}
+export const USER_EMAIL = 'USER_EMAIL';
 
-export function userWalletRequest(currencies, expenses) {
-  return {
-    type: USER_WALLET,
-    currencies,
-    expenses,
-  };
-}
+export const REQUEST_CURRENCY = 'REQUEST_CURRENCY';
+
+export const RECEIVE_CURRENCY_SUCCESS = 'RECEIVE_CURRENCY_SUCCESS';
+export const RECEIVE_CURRENCY_FAILURE = 'RECEIVE_CURRENCY_FAILURE';
+
+export const userEmailRequest = (email) => ({
+  type: USER_EMAIL,
+  email,
+});
+
+export const requestCurrency = () => ({
+  type: REQUEST_CURRENCY,
+});
+
+export const receiveCurrencySuccess = (currencies) => ({
+  type: RECEIVE_CURRENCY_SUCCESS,
+  currencies,
+});
+
+export const receiveWalletCurrencyFailure = (error) => ({
+  type: RECEIVE_CURRENCY_FAILURE,
+  error,
+});
+
+export const fetchWalletCurrency = () => (
+  async (dispatch) => {
+    dispatch(requestCurrency());
+    const apiCurrenciesFillter = await getCurrencies();
+    try {
+      dispatch(receiveCurrencySuccess(apiCurrenciesFillter));
+    } catch (error) {
+      dispatch(receiveWalletCurrencyFailure(error));
+    }
+  }
+);
