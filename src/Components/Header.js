@@ -4,10 +4,15 @@ import { connect } from 'react-redux';
 
 class Header extends Component {
   render() {
-    // const { email, expenses, currencies } = this.props;
-    const { email } = this.props;
-    const initialExpense = 0;
-    const initialCurrency = 'BRL';
+    const { email, expenses } = this.props;
+
+    const exchangeValue = expenses.map((moeda) => {
+      const { currency } = moeda;
+      const cotacao = moeda.exchangeRates[currency].ask;
+      return moeda.value * cotacao;
+    });
+
+    const totalExpenses = exchangeValue.reduce((acc, cur) => acc + cur, 0);
     return (
       <header>
         <h2
@@ -18,28 +23,26 @@ class Header extends Component {
         <h2
           data-testid="total-field"
         >
-          {initialExpense}
+          {totalExpenses.toFixed(2)}
         </h2>
         <h2
           data-testid="header-currency-field"
         >
-          {initialCurrency}
+          BRL
         </h2>
       </header>
     );
   }
 }
 
-const mapStateToProps = (store) => ({
-  email: store.user.email,
-  currencies: store.wallet.currencies,
-  expenses: store.wallet.expenses,
+const mapStateToProps = (state) => ({
+  email: state.user.email,
+  expenses: state.wallet.expenses,
 });
 
 Header.propTypes = {
   email: PropTypes.string.isRequired,
-  // currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
-  // expenses: PropTypes.arrayOf(PropTypes.number).isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
 };
 
 export default connect(mapStateToProps)(Header);

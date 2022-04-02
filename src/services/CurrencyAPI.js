@@ -1,10 +1,14 @@
-const url = 'https://economia.awesomeapi.com.br/json/all';
+const urlAll = 'https://economia.awesomeapi.com.br/json/all';
 
-const getCurrencies = async () => {
-  const response = await fetch(url);
+export const fetchCurrencies = async () => {
+  const response = await fetch(urlAll);
   const data = await response.json();
   const filterData = Object.keys(data).filter((obj) => obj !== 'USDT');
   return filterData;
 };
 
-export default getCurrencies;
+export const getExchange = async () => {
+  const response = await fetch(urlAll);
+  const data = await response.json();
+  return data;
+};
