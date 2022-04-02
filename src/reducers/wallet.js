@@ -5,8 +5,12 @@ const INITIAL_STATE = {
   currencies: [],
   expenses: [],
 };
+const INITIAL_VALUE = {
+  currencies: 'BRL',
+  expenses: '0',
+};
 
-function wallet(state = INITIAL_STATE, action) {
+function wallet(state = INITIAL_VALUE, action) {
   const { currencies, expenses } = action;
 
   switch (action.type) {
